@@ -1,0 +1,13 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+      poll-interval: 1000
+    add-properties: false
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/flux
+  thymeleaf:
+    reactive:
+      max-chunk-size: 1024
+      chunked-mode-view-names: listar-chunked
