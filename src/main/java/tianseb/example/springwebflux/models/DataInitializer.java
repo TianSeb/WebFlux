@@ -7,8 +7,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-import tianseb.example.springwebflux.models.dao.ProductoDao;
+import tianseb.example.springwebflux.models.documents.Categoria;
 import tianseb.example.springwebflux.models.documents.Producto;
+import tianseb.example.springwebflux.services.ProductoService;
 
 import java.util.Date;
 
@@ -17,8 +18,7 @@ import java.util.Date;
 @Slf4j
 public class DataInitializer implements ApplicationRunner {
 
-    private final ProductoDao productoDao;
-
+    private final ProductoService productoService;
     private final ReactiveMongoTemplate mongoTemplate;
 
     @Override
@@ -26,20 +26,34 @@ public class DataInitializer implements ApplicationRunner {
 
         mongoTemplate.dropCollection("productos")
                 .subscribe();
+        mongoTemplate.dropCollection("categorias")
+                .subscribe();
 
-        Flux.just(
-                new Producto("Manzana",252.23),
-                new Producto("Naranjas",155.55),
-                new Producto("Peras",211.05),
-                new Producto("Zanahorias",119.55),
-                new Producto("Bananas",555.23),
-                new Producto("Kiwis",232.55),
-                new Producto("Sandias", 124.23)
-                )
-                .flatMap(producto -> {
-                    producto.setCreatedAt(new Date());
-                    return productoDao.save(producto);
+        Categoria frutas = new Categoria("Frutas");
+        Categoria verduras = new Categoria("Verduras");
+        Categoria especiales = new Categoria("Especiales");
+
+        Flux.just(frutas, verduras, especiales)
+                .flatMap(productoService::saveCategoria)
+                .doOnNext(categoria -> {
+                    log.info("Category: {} saved", categoria.getNombre());
                 })
+                .thenMany(Flux.just(
+                                new Producto("Manzana", 252.23, frutas),
+                                new Producto("Naranjas", 155.55, frutas),
+                                new Producto("Peras", 211.05, frutas),
+                                new Producto("Zanahorias", 119.55, verduras),
+                                new Producto("Bananas", 555.23, frutas),
+                                new Producto("Kiwis", 232.55, frutas),
+                                new Producto("Lechuga", 124.23, verduras),
+                                new Producto("Tomate", 124.23, verduras),
+                                new Producto("Hongos Magicos", 124.23, especiales)
+                        )
+                        .flatMap(producto -> {
+                            producto.setCreatedAt(new Date());
+                            return productoService.save(producto);
+                        }))
+
                 .subscribe(producto -> log.info("Insert: {}, Name: {}",
                         producto.getId(),
                         producto.getNombre()));
