@@ -53,7 +53,6 @@ public class DataInitializer implements ApplicationRunner {
                             producto.setCreatedAt(new Date());
                             return productoService.save(producto);
                         }))
-
                 .subscribe(producto -> log.info("Insert: {}, Name: {}",
                         producto.getId(),
                         producto.getNombre()));

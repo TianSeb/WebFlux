@@ -25,6 +25,7 @@ public class Producto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
     @Valid
+    @NotNull
     private Categoria categoria;
     public Producto(String nombre, Double precio) {
         this.nombre = nombre;

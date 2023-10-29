@@ -8,6 +8,8 @@ import tianseb.example.springwebflux.models.dao.ProductoDao;
 import tianseb.example.springwebflux.models.documents.Categoria;
 import tianseb.example.springwebflux.models.documents.Producto;
 
+import java.util.Date;
+
 @Service
 public record ProductoServiceImpl(ProductoDao productoDao, CategoriaDao categoriaDao)
         implements ProductoService {
@@ -36,6 +38,9 @@ public record ProductoServiceImpl(ProductoDao productoDao, CategoriaDao categori
 
     @Override
     public Mono<Producto> save(Producto producto) {
+        if (producto.getCreatedAt() == null) {
+            producto.setCreatedAt(new Date());
+        }
         return productoDao.save(producto);
     }
 
