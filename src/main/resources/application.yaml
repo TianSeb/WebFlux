@@ -7,3 +7,5 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/flux
+  webflux:
+    base-path: /api/productos
