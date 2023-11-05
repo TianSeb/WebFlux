@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 import tianseb.example.springwebflux.models.documents.Producto;
 import tianseb.example.springwebflux.services.ProductoService;
 
+import java.net.URI;
 import java.util.Objects;
 
 @Component
@@ -38,7 +39,9 @@ public record ProductoHandler(ProductoService productoService, Validator validat
                     validator.validate(p, errors);
                     return errors.hasErrors() ? mapValidationErrors(errors) :
                             productoService.save(p)
-                                    .flatMap(pdb -> ServerResponse.ok().bodyValue(pdb));
+                                    .flatMap(pdb -> ServerResponse
+                                            .created(URI.create("/".concat(pdb.getId())))
+                                            .bodyValue(pdb));
                 });
     }
 

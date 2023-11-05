@@ -1,7 +1,6 @@
 package tianseb.example.springwebflux.router;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -17,7 +16,6 @@ public class RouterFunctionConfig {
 
     private final ProductoHandler productoHandler;
 
-    @Value("")
     @Bean
     public RouterFunction<ServerResponse> routes(){
         return route(GET("/"), productoHandler::listar)

@@ -16,6 +16,5 @@ public interface ProductoService {
     Flux<Categoria> findAllCategoria();
     Mono<Categoria> findCategoriaById(String id);
     Mono<Categoria> saveCategoria(Categoria categoria);
-
-
+    Mono<Producto> findByNombre(String nombre);
 }

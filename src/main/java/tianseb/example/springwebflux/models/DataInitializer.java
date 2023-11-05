@@ -22,8 +22,11 @@ public class DataInitializer implements ApplicationRunner {
     private final ReactiveMongoTemplate mongoTemplate;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
+        bootstrapData();
+    }
 
+    public void bootstrapData() {
         mongoTemplate.dropCollection("productos")
                 .subscribe();
         mongoTemplate.dropCollection("categorias")
